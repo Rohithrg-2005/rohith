@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuizMaster - Test Your Knowledge</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --white: #ffffff;
+            --gray-light: #e9ecef;
+            --gray-medium: #ced4da;
+            --gray-dark: #6c757d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #3a5a8a;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* Login Page Styles */
+        #login-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+        }
+
+        .team-members {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            font-size: 14px;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .team-members h3 {
+            margin-bottom: 5px;
+            border-bottom: 1px solid white;
+            padding-bottom: 5px;
+        }
+
+        .team-members ul {
+            list-style-type: none;
+        }
+
+        .login-container {
+            background-color: var(--white);
+            padding: 2.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo i {
+            font-size: 3rem;
+            color: var(--primary-color);
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-top: 0.5rem;
+        }
+
+        #login-form h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-medium);
+            border-radius: 0.375rem;
+            font-size: 1rem;
+        }
+
+        .form-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .form-links a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .form-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* App Container Styles */
+        #app-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-left .logo i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .header-left .logo h1 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .main-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .main-nav a:hover, .main-nav a.active {
+            color: var(--primary-color);
+        }
+
+        /* Main Content Styles */
+        #main-content {
+            flex: 1;
+            padding: 2rem;
+            background-color: var(--light-color);
+        }
+
+        .page {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Home Page Styles */
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .subject-card {
+            background-color: var(--white);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .subject-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.75rem;
+        }
+
+        .subject-card p {
+            color: var(--gray-dark);
+            margin-bottom: 1rem;
+        }
+
+        .subject-card .btn {
+            width: 100%;
+        }
+
+        /* Profile Page Styles */
+        .profile-container {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-pic {
+            text-align: center;
+            flex: 0 0 200px;
+        }
+
+        .profile-pic i {
+            font-size: 8rem;
+            color: var(--gray-medium);
+            display: block;
+            margin-bottom: 1rem;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .info-item {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            display: inline-block;
+            width: 120px;
+        }
+
+        .info-value {
+            color: var(--gray-dark);
+        }
+
+        /* Subject Page Styles */
+        .subject-header {
+            margin-bottom: 2rem;
+            background-color: var(--white);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .subject-description {
+            color: var(--gray-dark);
+            margin-top: 0.5rem;
+        }
+
+        .quiz-info {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-card {
+            flex: 1;
+            background-color: var(--white);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .info-card i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        /* Quiz Page Styles */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            background-color: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .quiz-timer {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .quiz-timer i {
+            color: var(--danger-color);
+        }
+
+        .question-container {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .recording-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            align-items: center;
+            color: var(--danger-color);
+            font-weight: bold;
+        }
+
+        .recording-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--danger-color);
+            border-radius: 50%;
+            margin-right: 5px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--gray-light);
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .option:hover {
+            background-color: var(--gray-light);
+        }
+
+        .option input[type="radio"] {
+            transform: scale(1.2);
+        }
+
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Results Page Styles */
+        .results-summary {
+            background-color: var(--white);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .summary-item {
+            padding: 0.5rem 0;
+        }
+
+        .summary-label {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .summary-value {
+            color: var(--gray-dark);
+        }
+
+        .question-breakdown {
+            background-color: var(--white);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .question-result {
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .question-result:last-child {
+            border-bottom: none;
+        }
+
+        .correct-answer {
+            color: var(--success-color);
+        }
+
+        .incorrect-answer {
+            color: var(--danger-color);
+        }
+
+        /* Leaderboard Page Styles */
+        .leaderboard-filter {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .leaderboard-filter select {
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            border: 1px solid var(--gray-medium);
+        }
+
+        .leaderboard-table {
+            background-color: var(--white);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            overflow-x: auto;
+        }
+
+        .leaderboard-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .leaderboard-table th, .leaderboard-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-light);
+        }
+
+        .leaderboard-table th {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .leaderboard-table tr:nth-child(even) {
+            background-color: var(--gray-light);
+        }
+
+        .leaderboard-table tr:hover {
+            background-color: #e2e6ea;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .modal h3 {
+            margin-bottom: 1.5rem;
+            color: var(--dark-color);
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .app-header {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            
+            .main-nav ul {
+                margin: 1rem 0;
+            }
+            
+            .profile-container {
+                flex-direction: column;
+            }
+            
+            .profile-pic {
+                flex: 0 0 auto;
+            }
+            
+            .quiz-info {
+                flex-direction: column;
+            }
+            
+            .quiz-navigation {
+                flex-direction: column-reverse;
+                gap: 1rem;
+            }
+            
+            .quiz-navigation button {
+                width: 100%;
+            }
+
+            .team-members {
+                position: static;
+                margin-top: 20px;
+                color: var(--dark-color);
+                background-color: transparent;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page (Initial View) -->
+    <div id="login-page" class="page active-page">
+        <div class="team-members">
+            <h3>Web programming project Team</h3>
+            <ul>
+                <li>Manish (23BDS1098)</li>
+                <li>Rohith (23BDS1019)</li>
+                <li>Karthik (23BDS1100)</li>
+				<li>username: Johndoe , password: password123</li>
+
+            </ul>
+        </div>
+        
+        <div class="login-container">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <h1>QuizMaster</h1>
+            </div>
+            
+            <form id="login-form">
+                <h2>Login to Your Account</h2>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+                
+                <div class="form-links">
+                    <a href="#" id="forgot-password">Forgot Password?</a>
+                    <a href="#" id="register-account">Register New Account</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Main App Container (Hidden until login) -->
+    <div id="app-container" class="hidden">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-brain"></i>
+                    <h1>QuizMaster</h1>
+                </div>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" class="nav-link" data-page="home"><i class="fas fa-home"></i> Home</a></li>
+                    <li><a href="#" class="nav-link" data-page="profile"><i class="fas fa-user"></i> Profile</a></li>
+                    <li><a href="#" class="nav-link" data-page="results"><i class="fas fa-chart-bar"></i> Results</a></li>
+                    <li><a href="#" class="nav-link" data-page="leaderboard"><i class="fas fa-trophy"></i> Leaderboard</a></li>
+                </ul>
+            </nav>
+            <div class="header-right">
+                <button id="logout-btn" class="btn btn-secondary"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </header>
+        
+        <!-- Main Content Area -->
+        <main id="main-content">
+            <!-- Home Page -->
+            <div id="home-page" class="page">
+                <h2>Available Subjects</h2>
+                <div class="subjects-grid" id="subjects-container">
+                    <!-- Subjects will be loaded here dynamically -->
+                </div>
+            </div>
+            
+            <!-- Profile Page -->
+            <div id="profile-page" class="page hidden">
+                <h2>User Profile</h2>
+                <div class="profile-container">
+                    <div class="profile-pic">
+                        <i class="fas fa-user-circle"></i>
+                        <button class="btn btn-secondary">Change Photo</button>
+                    </div>
+                    <div class="profile-info">
+                        <div class="info-item">
+                            <span class="info-label">Full Name:</span>
+                            <span class="info-value" id="profile-fullname">John Doe</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Username:</span>
+                            <span class="info-value" id="profile-username">johndoe</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email:</span>
+                            <span class="info-value" id="profile-email">john.doe@example.com</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Member Since:</span>
+                            <span class="info-value" id="profile-joindate">January 15, 2023</span>
+                        </div>
+                    </div>
+                </div>
+                <button id="edit-profile-btn" class="btn btn-primary">Edit Profile</button>
+            </div>
+            
+            <!-- Subject Selection Page -->
+            <div id="subject-page" class="page hidden">
+                <div class="subject-header">
+                    <h2 id="subject-title">Mathematics Quiz</h2>
+                    <p class="subject-description" id="subject-description">Test your knowledge of algebra, geometry, and calculus.</p>
+                </div>
+                
+                <div class="quiz-info">
+                    <div class="info-card">
+                        <i class="fas fa-question-circle"></i>
+                        <span>Number of Questions: <span id="question-count">10</span></span>
+                    </div>
+                    <div class="info-card">
+                        <i class="fas fa-clock"></i>
+                        <span>Time Limit: <span id="time-limit">15</span> minutes</span>
+                    </div>
+                </div>
+                
+                <button id="start-quiz-btn" class="btn btn-primary">Start Quiz</button>
+                <button class="btn btn-secondary back-to-home">Back to Home</button>
+            </div>
+            
+            <!-- Quiz Page -->
+            <div id="quiz-page" class="page hidden">
+                <div class="quiz-header">
+                    <div class="quiz-progress">
+                        <span id="question-position">Question 1 of 10</span>
+                    </div>
+                    <div class="quiz-timer">
+                        <i class="fas fa-clock"></i>
+                        <span id="time-remaining">14:55</span>
+                    </div>
+                </div>
+                
+                <div class="question-container">
+                    <div class="recording-indicator">
+                        <div class="recording-dot"></div>
+                        <span>Recording</span>
+                    </div>
+                    <div class="question-text" id="question-text">
+                        What is the capital of France?
+                    </div>
+                    
+                    <div class="options-container" id="options-container">
+                        <div class="option">
+                            <input type="radio" name="quiz-option" id="option1" value="1">
+                            <label for="option1" id="option1-label">Paris</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="quiz-option" id="option2" value="2">
+                            <label for="option2" id="option2-label">London</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="quiz-option" id="option3" value="3">
+                            <label for="option3" id="option3-label">Berlin</label>
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="quiz-option" id="option4" value="4">
+                            <label for="option4" id="option4-label">Madrid</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="quiz-navigation">
+                    <button id="prev-question-btn" class="btn btn-secondary" disabled>Previous</button>
+                    <button id="next-question-btn" class="btn btn-primary">Next</button>
+                    <button id="submit-quiz-btn" class="btn btn-primary hidden">Submit Quiz</button>
+                </div>
+            </div>
+            
+            <!-- Results Page -->
+            <div id="results-page" class="page hidden">
+                <h2>Your Quiz Results</h2>
+                <div class="results-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">Subject:</span>
+                        <span class="summary-value" id="result-subject">Mathematics</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Date:</span>
+                        <span class="summary-value" id="result-date">March 15, 2023</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Score:</span>
+                        <span class="summary-value" id="result-score">8/10 (80%)</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Time Taken:</span>
+                        <span class="summary-value" id="result-time">12:45 of 15:00</span>
+                    </div>
+                </div>
+                
+                <h3>Question Breakdown</h3>
+                <div class="question-breakdown" id="question-breakdown">
+                    <!-- Question results will be loaded here dynamically -->
+                </div>
+                
+                <button class="btn btn-primary back-to-home">Return to Home</button>
+            </div>
+            
+            <!-- Leaderboard Page -->
+            <div id="leaderboard-page" class="page hidden">
+                <h2>Top Performers</h2>
+                <div class="leaderboard-filter">
+                    <label for="subject-filter">Subject:</label>
+                    <select id="subject-filter">
+                        <option value="all">All Subjects</option>
+                        <option value="1">Mathematics</option>
+                        <option value="2">Science</option>
+                        <option value="3">History</option>
+                    </select>
+                </div>
+                
+                <div class="leaderboard-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Username</th>
+                                <th>Score</th>
+                                <th>Time Taken</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-data">
+                            <!-- Leaderboard data will be loaded here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Modal Dialog for Logout Confirmation -->
+    <div id="logout-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Are you sure you want to log out?</h3>
+            <div class="modal-buttons">
+                <button id="cancel-logout" class="btn btn-secondary">Cancel</button>
+                <button id="confirm-logout" class="btn btn-primary">Logout</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Edit Profile</h3>
+            <form id="edit-profile-form">
+                <div class="form-group">
+                    <label for="edit-fullname">Full Name</label>
+                    <input type="text" id="edit-fullname" name="fullname" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-email">Email</label>
+                    <input type="email" id="edit-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit-password">New Password (leave blank to keep current)</label>
+                    <input type="password" id="edit-password" name="password">
+                </div>
+                <div class="form-group">
+                    <label for="edit-confirm-password">Confirm New Password</label>
+                    <input type="password" id="edit-confirm-password" name="confirm_password">
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" id="cancel-edit" class="btn btn-secondary">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Sample Data (In a real app, this would come from a backend API)
+        const sampleData = {
+            users: [
+                {
+                    user_id: 1,
+                    username: "johndoe",
+                    password: "hashedpassword123",
+                    email: "john.doe@example.com",
+                    full_name: "John Doe",
+                    created_at: "2023-01-15"
+                }
+            ],
+            subjects: [
+                {
+                    subject_id: 1,
+                    subject_name: "Mathematics",
+                    description: "Test your knowledge of algebra, geometry, and calculus."
+                },
+                {
+                    subject_id: 2,
+                    subject_name: "Science",
+                    description: "Explore questions about biology, chemistry, and physics."
+                },
+                {
+                    subject_id: 3,
+                    subject_name: "History",
+                    description: "Challenge yourself with world history questions."
+                },
+                {
+                    subject_id: 4,
+                    subject_name: "Geography",
+                    description: "Test your knowledge of countries, capitals, and landmarks."
+                }
+            ],
+            questions: {
+                1: [
+                    {
+                        question_id: 1,
+                        question_text: "What is the value of π (pi) to two decimal places?",
+                        option1: "3.14",
+                        option2: "3.16",
+                        option3: "3.18",
+                        option4: "3.12",
+                        correct_option: 1,
+                        time_limit: 30
+                    },
+                    {
+                        question_id: 2,
+                        question_text: "What is the square root of 64?",
+                        option1: "6",
+                        option2: "7",
+                        option3: "8",
+                        option4: "9",
+                        correct_option: 3,
+                        time_limit: 20
+                    },
+                    {
+                        question_id: 3,
+                        question_text: "What is the sum of angles in a triangle?",
+                        option1: "90 degrees",
+                        option2: "180 degrees",
+                        option3: "270 degrees",
+                        option4: "360 degrees",
+                        correct_option: 2,
+                        time_limit: 25
+                    },
+                    {
+                        question_id: 4,
+                        question_text: "What is 5 factorial (5!)?",
+                        option1: "20",
+                        option2: "60",
+                        option3: "120",
+                        option4: "240",
+                        correct_option: 3,
+                        time_limit: 30
+                    }
+                ],
+                2: [
+                    {
+                        question_id: 5,
+                        question_text: "What is the chemical symbol for gold?",
+                        option1: "Go",
+                        option2: "Gd",
+                        option3: "Au",
+                        option4: "Ag",
+                        correct_option: 3,
+                        time_limit: 20
+                    },
+                    {
+                        question_id: 6,
+                        question_text: "Which planet is known as the Red Planet?",
+                        option1: "Venus",
+                        option2: "Mars",
+                        option3: "Jupiter",
+                        option4: "Saturn",
+                        correct_option: 2,
+                        time_limit: 20
+                    }
+                ],
+                3: [
+                    {
+                        question_id: 7,
+                        question_text: "In which year did World War II end?",
+                        option1: "1943",
+                        option2: "1944",
+                        option3: "1945",
+                        option4: "1946",
+                        correct_option: 3,
+                        time_limit: 25
+                    },
+                    {
+                        question_id: 8,
+                        question_text: "Who was the first president of the United States?",
+                        option1: "Thomas Jefferson",
+                        option2: "John Adams",
+                        option3: "George Washington",
+                        option4: "Abraham Lincoln",
+                        correct_option: 3,
+                        time_limit: 20
+                    }
+                ]
+            },
+            quiz_results: [
+                {
+                    result_id: 1,
+                    user_id: 1,
+                    subject_id: 1,
+                    score: 8,
+                    total_questions: 10,
+                    time_taken: "12:45",
+                    completed_at: "2023-03-15"
+                },
+                {
+                    result_id: 2,
+                    user_id: 1,
+                    subject_id: 2,
+                    score: 7,
+                    total_questions: 10,
+                    time_taken: "14:20",
+                    completed_at: "2023-03-18"
+                }
+            ],
+            leaderboard: [
+                {
+                    rank: 1,
+                    username: "user123",
+                    subject_id: 1,
+                    subject_name: "Mathematics",
+                    score: 95,
+                    time_taken: "13:20"
+                },
+                {
+                    rank: 2,
+                    username: "quizmaster",
+                    subject_id: 1,
+                    subject_name: "Mathematics",
+                    score: 90,
+                    time_taken: "14:55"
+                },
+                {
+                    rank: 3,
+                    username: "johndoe",
+                    subject_id: 1,
+                    subject_name: "Mathematics",
+                    score: 80,
+                    time_taken: "12:45"
+                },
+                {
+                    rank: 1,
+                    username: "sciencewhiz",
+                    subject_id: 2,
+                    subject_name: "Science",
+                    score: 92,
+                    time_taken: "13:45"
+                },
+                {
+                    rank: 2,
+                    username: "johndoe",
+                    subject_id: 2,
+                    subject_name: "Science",
+                    score: 85,
+                    time_taken: "14:30"
+                }
+            ]
+        };
+
+        // DOM Elements
+        const loginPage = document.getElementById('login-page');
+        const appContainer = document.getElementById('app-container');
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const logoutBtn = document.getElementById('logout-btn');
+        const logoutModal = document.getElementById('logout-modal');
+        const cancelLogout = document.getElementById('cancel-logout');
+        const confirmLogout = document.getElementById('confirm-logout');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const pages = document.querySelectorAll('.page');
+        const subjectsContainer = document.getElementById('subjects-container');
+        const subjectPage = document.getElementById('subject-page');
+        const subjectTitle = document.getElementById('subject-title');
+        const subjectDescription = document.getElementById('subject-description');
+        const questionCount = document.getElementById('question-count');
+        const timeLimit = document.getElementById('time-limit');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const quizPage = document.getElementById('quiz-page');
+        const questionPosition = document.getElementById('question-position');
+        const timeRemaining = document.getElementById('time-remaining');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const prevQuestionBtn = document.getElementById('prev-question-btn');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+        const submitQuizBtn = document.getElementById('submit-quiz-btn');
+        const resultsPage = document.getElementById('results-page');
+        const resultSubject = document.getElementById('result-subject');
+        const resultDate = document.getElementById('result-date');
+        const resultScore = document.getElementById('result-score');
+        const resultTime = document.getElementById('result-time');
+        const questionBreakdown = document.getElementById('question-breakdown');
+        const profilePage = document.getElementById('profile-page');
+        const profileFullname = document.getElementById('profile-fullname');
+        const profileUsername = document.getElementById('profile-username');
+        const profileEmail = document.getElementById('profile-email');
+        const profileJoindate = document.getElementById('profile-joindate');
+        const editProfileBtn = document.getElementById('edit-profile-btn');
+        const editProfileModal = document.getElementById('edit-profile-modal');
+        const cancelEdit = document.getElementById('cancel-edit');
+        const editProfileForm = document.getElementById('edit-profile-form');
+        const leaderboardPage = document.getElementById('leaderboard-page');
+        const subjectFilter = document.getElementById('subject-filter');
+        const leaderboardData = document.getElementById('leaderboard-data');
+        const backToHomeButtons = document.querySelectorAll('.back-to-home');
+
+        // App State
+        let currentUser = null;
+        let currentSubject = null;
+        let currentQuestions = [];
+        let currentQuiz = {
+            answers: [],
+            startTime: null,
+            endTime: null,
+            currentQuestionIndex: 0,
+            mediaRecorder: null,
+            recordedChunks: []
+        };
+
+        // Initialize the app
+        function init() {
+            // Event Listeners
+            loginForm.addEventListener('submit', handleLogin);
+            logoutBtn.addEventListener('click', () => logoutModal.classList.remove('hidden'));
+            cancelLogout.addEventListener('click', () => logoutModal.classList.add('hidden'));
+            confirmLogout.addEventListener('click', handleLogout);
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const pageId = link.getAttribute('data-page');
+                    showPage(pageId);
+                });
+            });
+            
+            startQuizBtn.addEventListener('click', startQuiz);
+            prevQuestionBtn.addEventListener('click', showPreviousQuestion);
+            nextQuestionBtn.addEventListener('click', showNextQuestion);
+            submitQuizBtn.addEventListener('click', submitQuiz);
+            
+            editProfileBtn.addEventListener('click', () => editProfileModal.classList.remove('hidden'));
+            cancelEdit.addEventListener('click', () => editProfileModal.classList.add('hidden'));
+            editProfileForm.addEventListener('submit', handleEditProfile);
+            
+            subjectFilter.addEventListener('change', updateLeaderboard);
+            
+            backToHomeButtons.forEach(button => {
+                button.addEventListener('click', () => showPage('home'));
+            });
+            
+            // Load sample subjects
+            loadSubjects();
+        }
+
+        // Show a specific page
+        function showPage(pageId) {
+            pages.forEach(page => {
+                if (page.id === `${pageId}-page`) {
+                    page.classList.remove('hidden');
+                } else {
+                    page.classList.add('hidden');
+                }
+            });
+            
+            // Update active nav link
+            navLinks.forEach(link => {
+                if (link.getAttribute('data-page') === pageId) {
+                    link.classList.add('active');
+                } else {
+                    link.classList.remove('active');
+                }
+            });
+            
+            // Special handling for certain pages
+            if (pageId === 'profile') {
+                loadProfile();
+            } else if (pageId === 'results') {
+                loadResults();
+            } else if (pageId === 'leaderboard') {
+                updateLeaderboard();
+            }
+        }
+
+        // Handle login
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+            
+            // Simple validation
+            if (!username || !password) {
+                alert('Please enter both username and password');
+                return;
+            }
+            
+            // In a real app, this would be an API call to verify credentials
+            const user = sampleData.users.find(u => u.username === username && u.password === `hashed${password}`);
+            
+            if (user) {
+                currentUser = user;
+                loginPage.classList.remove('active-page');
+                appContainer.classList.remove('hidden');
+                showPage('home');
+            } else {
+                alert('Invalid username or password');
+            }
+        }
+
+        // Handle logout
+        function handleLogout() {
+            currentUser = null;
+            logoutModal.classList.add('hidden');
+            appContainer.classList.add('hidden');
+            loginPage.classList.add('active-page');
+            usernameInput.value = '';
+            passwordInput.value = '';
+        }
+
+        // Load subjects
+        function loadSubjects() {
+            subjectsContainer.innerHTML = '';
+            
+            sampleData.subjects.forEach(subject => {
+                const subjectCard = document.createElement('div');
+                subjectCard.className = 'subject-card';
+                subjectCard.innerHTML = `
+                    <h3>${subject.subject_name}</h3>
+                    <p>${subject.description}</p>
+                    <button class="btn btn-primary" data-subject-id="${subject.subject_id}">Start Quiz</button>
+                `;
+                
+                subjectCard.querySelector('button').addEventListener('click', () => {
+                    showSubjectPage(subject.subject_id);
+                });
+                
+                subjectsContainer.appendChild(subjectCard);
+            });
+        }
+
+        // Show subject page
+        function showSubjectPage(subjectId) {
+            const subject = sampleData.subjects.find(s => s.subject_id === subjectId);
+            if (!subject) return;
+            
+            currentSubject = subject;
+            subjectTitle.textContent = `${subject.subject_name} Quiz`;
+            subjectDescription.textContent = subject.description;
+            
+            // In a real app, these would come from the backend
+            questionCount.textContent = sampleData.questions[subjectId]?.length || 10;
+            timeLimit.textContent = 15; // Default time limit
+            
+            showPage('subject');
+        }
+
+        // Start quiz
+        function startQuiz() {
+            if (!currentSubject) return;
+            
+            // In a real app, this would be an API call to get questions
+            currentQuestions = sampleData.questions[currentSubject.subject_id] || [];
+            
+            if (currentQuestions.length === 0) {
+                alert('No questions available for this subject');
+                return;
+            }
+            
+            // Initialize quiz state
+            currentQuiz = {
+                answers: new Array(currentQuestions.length).fill(null),
+                startTime: new Date(),
+                endTime: null,
+                currentQuestionIndex: 0,
+                mediaRecorder: null,
+                recordedChunks: []
+            };
+            
+            // Start screen recording
+            startScreenRecording();
+            
+            // Start timer (in a real app, this would be more sophisticated)
+            startQuizTimer();
+            
+            // Show first question
+            showQuestion(0);
+            showPage('quiz');
+        }
+
+        // Start screen recording
+        async function startScreenRecording() {
+            try {
+                // In a real app, you would use the MediaRecorder API to record the screen
+                // This is a simplified version that just shows the recording indicator
+                console.log('Screen recording started (simulated)');
+                
+                // In a real implementation, you would:
+                // 1. Request screen capture permission
+                // 2. Create a MediaRecorder instance
+                // 3. Start recording
+                // 4. Store the recorded chunks
+                // 5. Stop recording when quiz is submitted
+                
+                // For this demo, we'll just simulate the recording
+                currentQuiz.mediaRecorder = {
+                    state: 'recording',
+                    stop: function() {
+                        console.log('Screen recording stopped (simulated)');
+                        this.state = 'inactive';
+                    }
+                };
+                
+            } catch (error) {
+                console.error('Error starting screen recording:', error);
+                // Even if recording fails, allow the quiz to continue
+            }
+        }
+
+        // Stop screen recording
+        function stopScreenRecording() {
+            if (currentQuiz.mediaRecorder && currentQuiz.mediaRecorder.state === 'recording') {
+                currentQuiz.mediaRecorder.stop();
+                
+                // In a real app, you would:
+                // 1. Combine the recorded chunks into a Blob
+                // 2. Create a download link or upload to server
+                // 3. Save the recording reference with the quiz results
+                
+                console.log('Screen recording saved (simulated)');
+            }
+        }
+
+        // Show question
+        function showQuestion(index) {
+            if (index < 0 || index >= currentQuestions.length) return;
+            
+            const question = currentQuestions[index];
+            currentQuiz.currentQuestionIndex = index;
+            
+            // Update question position
+            questionPosition.textContent = `Question ${index + 1} of ${currentQuestions.length}`;
+            
+            // Update question text
+            questionText.textContent = question.question_text;
+            
+            // Update options
+            document.getElementById('option1-label').textContent = question.option1;
+            document.getElementById('option2-label').textContent = question.option2;
+            document.getElementById('option3-label').textContent = question.option3;
+            document.getElementById('option4-label').textContent = question.option4;
+            
+            // Clear any previous selection
+            document.querySelectorAll('input[name="quiz-option"]').forEach(radio => {
+                radio.checked = false;
+            });
+            
+            // Restore saved answer if exists
+            if (currentQuiz.answers[index] !== null) {
+                document.getElementById(`option${currentQuiz.answers[index]}`).checked = true;
+            }
+            
+            // Update navigation buttons
+            prevQuestionBtn.disabled = index === 0;
+            nextQuestionBtn.disabled = index === currentQuestions.length - 1;
+            
+            // Show submit button on last question
+            if (index === currentQuestions.length - 1) {
+                submitQuizBtn.classList.remove('hidden');
+                nextQuestionBtn.classList.add('hidden');
+            } else {
+                submitQuizBtn.classList.add('hidden');
+                nextQuestionBtn.classList.remove('hidden');
+            }
+        }
+
+        // Show previous question
+        function showPreviousQuestion() {
+            saveCurrentAnswer();
+            showQuestion(currentQuiz.currentQuestionIndex - 1);
+        }
+
+        // Show next question
+        function showNextQuestion() {
+            saveCurrentAnswer();
+            showQuestion(currentQuiz.currentQuestionIndex + 1);
+        }
+
+        // Save current answer
+        function saveCurrentAnswer() {
+            const selectedOption = document.querySelector('input[name="quiz-option"]:checked');
+            if (selectedOption) {
+                currentQuiz.answers[currentQuiz.currentQuestionIndex] = parseInt(selectedOption.value);
+            }
+        }
+
+        // Start quiz timer
+        function startQuizTimer() {
+            const totalTime = 15 * 60 * 1000; // 15 minutes in milliseconds
+            const startTime = new Date().getTime();
+            const endTime = startTime + totalTime;
+            
+            function updateTimer() {
+                const now = new Date().getTime();
+                const remainingTime = endTime - now;
+                
+                if (remainingTime <= 0) {
+                    // Time's up!
+                    clearInterval(timerInterval);
+                    timeRemaining.textContent = "00:00";
+                    submitQuiz();
+                    return;
+                }
+                
+                const minutes = Math.floor((remainingTime % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((remainingTime % (1000 * 60)) / 1000);
+                
+                timeRemaining.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            // Update immediately and then every second
+            updateTimer();
+            const timerInterval = setInterval(updateTimer, 1000);
+        }
+
+        // Submit quiz
+        function submitQuiz() {
+            saveCurrentAnswer();
+            currentQuiz.endTime = new Date();
+            
+            // Stop screen recording
+            stopScreenRecording();
+            
+            // Calculate score
+            let score = 0;
+            const questionResults = [];
+            
+            currentQuestions.forEach((question, index) => {
+                const isCorrect = currentQuiz.answers[index] === question.correct_option;
+                if (isCorrect) score++;
+                
+                questionResults.push({
+                    question: question.question_text,
+                    userAnswer: currentQuiz.answers[index],
+                    correctAnswer: question.correct_option,
+                    isCorrect,
+                    options: [
+                        question.option1,
+                        question.option2,
+                        question.option3,
+                        question.option4
+                    ]
+                });
+            });
+            
+            // Calculate time taken
+            const timeTakenMs = currentQuiz.endTime - currentQuiz.startTime;
+            const minutes = Math.floor(timeTakenMs / (1000 * 60));
+            const seconds = Math.floor((timeTakenMs % (1000 * 60)) / 1000);
+            const timeTakenStr = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // In a real app, we would save the results to the backend
+            const newResult = {
+                result_id: sampleData.quiz_results.length + 1,
+                user_id: currentUser.user_id,
+                subject_id: currentSubject.subject_id,
+                score,
+                total_questions: currentQuestions.length,
+                time_taken: timeTakenStr,
+                completed_at: new Date().toISOString().split('T')[0]
+            };
+            
+            sampleData.quiz_results.push(newResult);
+            
+            // Display results
+            displayQuizResults(score, currentQuestions.length, timeTakenStr, questionResults);
+            showPage('results');
+        }
+
+        // Display quiz results
+        function displayQuizResults(score, totalQuestions, timeTaken, questionResults) {
+            const percentage = Math.round((score / totalQuestions) * 100);
+            
+            resultSubject.textContent = currentSubject.subject_name;
+            resultDate.textContent = new Date().toLocaleDateString();
+            resultScore.textContent = `${score}/${totalQuestions} (${percentage}%)`;
+            resultTime.textContent = `${timeTaken} of 15:00`;
+            
+            // Display question breakdown
+            questionBreakdown.innerHTML = '';
+            
+            questionResults.forEach((result, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-result';
+                
+                const questionText = document.createElement('p');
+                questionText.textContent = `${index + 1}. ${result.question}`;
+                
+                const userAnswer = document.createElement('p');
+                const userAnswerLetter = String.fromCharCode(64 + result.userAnswer);
+                const correctAnswerLetter = String.fromCharCode(64 + result.correctAnswer);
+                
+                if (result.isCorrect) {
+                    userAnswer.className = 'correct-answer';
+                    userAnswer.textContent = `Your answer: ${userAnswerLetter} (Correct)`;
+                } else {
+                    userAnswer.className = 'incorrect-answer';
+                    userAnswer.textContent = `Your answer: ${userAnswerLetter} (Incorrect - Correct answer was ${correctAnswerLetter})`;
+                }
+                
+                questionDiv.appendChild(questionText);
+                questionDiv.appendChild(userAnswer);
+                questionBreakdown.appendChild(questionDiv);
+            });
+        }
+
+        // Load profile
+        function loadProfile() {
+            if (!currentUser) return;
+            
+            profileFullname.textContent = currentUser.full_name;
+            profileUsername.textContent = currentUser.username;
+            profileEmail.textContent = currentUser.email;
+            profileJoindate.textContent = new Date(currentUser.created_at).toLocaleDateString();
+            
+            // Populate edit form with current values
+            document.getElementById('edit-fullname').value = currentUser.full_name;
+            document.getElementById('edit-email').value = currentUser.email;
+        }
+
+        // Handle edit profile
+        function handleEditProfile(e) {
+            e.preventDefault();
+            
+            const fullname = document.getElementById('edit-fullname').value.trim();
+            const email = document.getElementById('edit-email').value.trim();
+            const password = document.getElementById('edit-password').value.trim();
+            const confirmPassword = document.getElementById('edit-confirm-password').value.trim();
+            
+            // Simple validation
+            if (!fullname || !email) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            if (password && password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            // In a real app, this would be an API call to update the profile
+            currentUser.full_name = fullname;
+            currentUser.email = email;
+            if (password) {
+                currentUser.password = `hashed${password}`;
+            }
+            
+            // Update profile display
+            loadProfile();
+            
+            // Close modal
+            editProfileModal.classList.add('hidden');
+            editProfileForm.reset();
+        }
+
+        // Load results
+        function loadResults() {
+            // In a real app, this would be an API call to get user's results
+            const userResults = sampleData.quiz_results.filter(r => r.user_id === currentUser.user_id);
+            
+            // For now, just show the most recent result
+            if (userResults.length > 0) {
+                const mostRecent = userResults[userResults.length - 1];
+                const subject = sampleData.subjects.find(s => s.subject_id === mostRecent.subject_id);
+                
+                resultSubject.textContent = subject?.subject_name || 'Unknown Subject';
+                resultDate.textContent = mostRecent.completed_at;
+                resultScore.textContent = `${mostRecent.score}/${mostRecent.total_questions} (${Math.round((mostRecent.score / mostRecent.total_questions) * 100)}%)`;
+                resultTime.textContent = `${mostRecent.time_taken} of 15:00`;
+                
+                // For now, we don't have the question details in the sample data
+                questionBreakdown.innerHTML = '<p>Question details not available in sample data.</p>';
+            } else {
+                resultSubject.textContent = 'No quizzes taken yet';
+                resultDate.textContent = '';
+                resultScore.textContent = '';
+                resultTime.textContent = '';
+                questionBreakdown.innerHTML = '<p>You haven\'t taken any quizzes yet.</p>';
+            }
+        }
+
+        // Update leaderboard
+        function updateLeaderboard() {
+            const subjectId = parseInt(subjectFilter.value);
+            
+            // Filter leaderboard data by subject if not "all"
+            let filteredData = subjectId ? 
+                sampleData.leaderboard.filter(item => item.subject_id === subjectId) : 
+                sampleData.leaderboard;
+            
+            // Sort by score (descending)
+            filteredData.sort((a, b) => b.score - a.score);
+            
+            // Update ranks
+            filteredData.forEach((item, index) => {
+                item.rank = index + 1;
+            });
+            
+            // Display data
+            leaderboardData.innerHTML = '';
+            
+            if (filteredData.length === 0) {
+                leaderboardData.innerHTML = '<tr><td colspan="4">No data available for the selected subject.</td></tr>';
+                return;
+            }
+            
+            filteredData.forEach(item => {
+                const row = document.createElement('tr');
+                
+                // Highlight current user
+                if (item.username === currentUser.username) {
+                    row.classList.add('current-user');
+                }
+                
+                row.innerHTML = `
+                    <td>${item.rank}</td>
+                    <td>${item.username}</td>
+                    <td>${item.score}%</td>
+                    <td>${item.time_taken}</td>
+                `;
+                
+                leaderboardData.appendChild(row);
+            });
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
